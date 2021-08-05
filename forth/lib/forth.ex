@@ -1,7 +1,6 @@
 defmodule Forth do
-  @opaque evaluator :: any
 
-  defstruct [:stack, :defs]
+  @opaque evaluator :: %{}
 
   @doc """
   Create a new evaluator.
@@ -21,31 +20,34 @@ defmodule Forth do
     |> parse(ev)
   end
 
+  defp parse({tokens, ev}), do: parse(tokens, ev)
+
   defp parse([], ev), do: ev
 
-  defp parse([token|tokens], %{stack: stack, defs: definitions}=ev) do
-    {ev, tokens} = if Map.has_key?(definitions, token) do
-      {parse_value(ev, token), tokens}
+  defp parse([token|tokens], %{defs: definitions}=ev) do
+    if Map.has_key?(definitions, token) do
+      parse_value(tokens, token, ev) |> parse
     else
-       case token do
-        "+" -> {add(ev), tokens}
-        "-" -> {sub(ev), tokens}
-        "*" -> {mul(ev), tokens}
-        "/" -> {div(ev), tokens}
-        "DUP"  ->  {dup(ev), tokens}
-        "DROP" ->  {drop(ev), tokens}
-        "SWAP" -> {swap(ev), tokens}
-        "OVER" -> {over(ev), tokens}
-        ":" -> parse_def(tokens, ev)
-        _ -> {parse_value(ev, token), tokens}
-      end
+      parse_builtin(tokens, token, ev) |> parse
     end
-    parse(tokens, ev)
   end
 
+  defp parse_builtin(tokens, word, ev) do
+    case word do
+      "+" -> {tokens, add(ev)}
+      "-" -> {tokens, sub(ev)}
+      "*" -> {tokens, mul(ev)}
+      "/" -> {tokens, div(ev)}
+      "DUP"  -> {tokens, dup(ev)}
+      "DROP" -> {tokens, drop(ev)}
+      "SWAP" -> {tokens, swap(ev)}
+      "OVER" -> {tokens, over(ev)}
+      ":" -> parse_def(tokens, ev)
+      _ -> parse_value(tokens, word, ev)
+    end
+  end
 
   defp parse_def(tokens, ev) do
-
     {def_body, tokens} = Enum.split_while(tokens, &(&1 != ";"))
     if tokens == [] or hd(tokens) != ";" do
       raise Forth.InvalidWord
@@ -55,25 +57,25 @@ defmodule Forth do
       raise Forth.InvalidWord
     end
     ev = %{ev| defs: Map.put(ev.defs, word, body) }
-    {ev, tl(tokens)}
+    {tl(tokens), ev}
   end
 
-  defp parse_value(%{stack: stack}=ev, token) do
+  defp parse_value(tokens, token, %{stack: stack}=ev) do
     try do
-      %{ev| stack: [String.to_integer(token)|stack]}
+      {tokens, %{ev| stack: [String.to_integer(token)|stack]}}
     rescue
-        ArgumentError -> try_eval_def(token, ev)
+        ArgumentError -> try_eval_def(tokens, token, ev)
     end
   end
 
-  defp try_eval_def(word, %{stack: stack, defs: definitions}=ev) do
+  defp try_eval_def(tokens, word, %{stack: stack, defs: definitions}=ev) do
     if !Map.has_key?(definitions, word) do
       raise Forth.UnknownWord
     else
       forth = %{stack: stack, defs: %{}}
       code = Map.get(definitions, word)
       result = parse(code, forth)
-      %{ev| stack: result.stack}
+      {tokens, %{ev| stack: result.stack}}
     end
   end
 
