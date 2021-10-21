@@ -87,7 +87,7 @@ defmodule Yacht do
     Enum.sum(dice)
   end
 
-  def score(category, dice) do
+  def score(_, _) do
     0
   end
 
