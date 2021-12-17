@@ -19,69 +19,45 @@ defmodule FoodChain do
     ["I know an old lady who swallowed a #{animal(i)}." | previous(i)]
   end
 
-  defp previous(1), do: ["I don't know why she swallowed the fly. Perhaps she'll die."]
+  defp just(1) do
+    "I don't know why she swallowed the fly. Perhaps she'll die."
+  end
+
+  defp just(3) do
+    "She swallowed the #{animal(3)} to catch the #{animal(2)} that wriggled and jiggled and tickled inside her."
+  end
+
+  defp just(i) do
+    "She swallowed the #{animal(i)} to catch the #{animal(i - 1)}."
+  end
+
+  defp justs(1), do: [just(1)]
+  defp justs(i), do: [just(i) | justs(i - 1)]
+
+  defp previous(1), do: justs(1)
 
   defp previous(2) do
-    [
-      "It wriggled and jiggled and tickled inside her.",
-      "She swallowed the #{animal(2)} to catch the #{animal(1)}.",
-      "I don't know why she swallowed the fly. Perhaps she'll die."
-    ]
+    ["It wriggled and jiggled and tickled inside her." | justs(2)]
   end
 
   defp previous(3) do
-    [
-      "How absurd to swallow a bird!",
-      "She swallowed the #{animal(3)} to catch the #{animal(2)} that wriggled and jiggled and tickled inside her.",
-      "She swallowed the #{animal(2)} to catch the #{animal(1)}.",
-      "I don't know why she swallowed the fly. Perhaps she'll die."
-    ]
+    ["How absurd to swallow a bird!" | justs(3)]
   end
 
   defp previous(4) do
-    [
-      "Imagine that, to swallow a cat!",
-      "She swallowed the #{animal(4)} to catch the #{animal(3)}.",
-      "She swallowed the #{animal(3)} to catch the #{animal(2)} that wriggled and jiggled and tickled inside her.",
-      "She swallowed the #{animal(2)} to catch the #{animal(1)}.",
-      "I don't know why she swallowed the fly. Perhaps she'll die."
-    ]
+    ["Imagine that, to swallow a cat!" | justs(4)]
   end
 
   defp previous(5) do
-    [
-      "What a hog, to swallow a dog!",
-      "She swallowed the #{animal(5)} to catch the #{animal(4)}.",
-      "She swallowed the #{animal(4)} to catch the #{animal(3)}.",
-      "She swallowed the #{animal(3)} to catch the #{animal(2)} that wriggled and jiggled and tickled inside her.",
-      "She swallowed the #{animal(2)} to catch the #{animal(1)}.",
-      "I don't know why she swallowed the fly. Perhaps she'll die."
-    ]
+    ["What a hog, to swallow a dog!" | justs(5)]
   end
 
   defp previous(6) do
-    [
-      "Just opened her throat and swallowed a goat!",
-      "She swallowed the #{animal(6)} to catch the #{animal(5)}.",
-      "She swallowed the #{animal(5)} to catch the #{animal(4)}.",
-      "She swallowed the #{animal(4)} to catch the #{animal(3)}.",
-      "She swallowed the #{animal(3)} to catch the #{animal(2)} that wriggled and jiggled and tickled inside her.",
-      "She swallowed the #{animal(2)} to catch the #{animal(1)}.",
-      "I don't know why she swallowed the fly. Perhaps she'll die."
-    ]
+    ["Just opened her throat and swallowed a goat!" | justs(6)]
   end
 
   defp previous(7) do
-    [
-      "I don't know how she swallowed a cow!",
-      "She swallowed the #{animal(7)} to catch the #{animal(6)}.",
-      "She swallowed the #{animal(6)} to catch the #{animal(5)}.",
-      "She swallowed the #{animal(5)} to catch the #{animal(4)}.",
-      "She swallowed the #{animal(4)} to catch the #{animal(3)}.",
-      "She swallowed the #{animal(3)} to catch the #{animal(2)} that wriggled and jiggled and tickled inside her.",
-      "She swallowed the #{animal(2)} to catch the #{animal(1)}.",
-      "I don't know why she swallowed the fly. Perhaps she'll die."
-    ]
+    ["I don't know how she swallowed a cow!" | justs(7)]
   end
 
   defp previous(8) do
