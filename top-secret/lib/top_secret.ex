@@ -16,7 +16,7 @@ defmodule TopSecret do
     {ast, acc}
   end
 
-  defp decode_secret_message_parts([{:when, _, guard}|body], ast, acc) do
+  defp decode_secret_message_parts([{:when, _, guard}|_], ast, acc) do
     arity = hd(guard) |> elem(2) |> len
     name = hd(guard) |> elem(0) |> Atom.to_string() |> String.slice(0, arity)
     {ast, [name|acc]}
@@ -30,7 +30,7 @@ defmodule TopSecret do
 
 
   def decode_secret_message(string) do
-    {ast, funcs} = to_ast(string) |> Macro.postwalk([], &traverse/2)
+    {_, funcs} = to_ast(string) |> Macro.postwalk([], &traverse/2)
     funcs |> Enum.reduce([""], fn ast, acc ->
       {_, new_acc} = decode_secret_message_part(ast, acc)
       new_acc
@@ -38,11 +38,11 @@ defmodule TopSecret do
     |> Enum.join()
   end
 
-  defp traverse({:def, _, body}=node, acc) do
+  defp traverse({:def, _, _}=node, acc) do
     {node, [node | acc]}
   end
 
-  defp traverse({:defp, _, body}=node, acc) do
+  defp traverse({:defp, _, _}=node, acc) do
     {node, [node | acc]}
   end
 
