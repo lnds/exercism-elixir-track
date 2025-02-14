@@ -1,7 +1,7 @@
 defmodule LogLevelTest do
   use ExUnit.Case
 
-  describe "LogLevel.to_label/1" do
+  describe "LogLevel.to_label/2" do
     @tag task_id: 1
     test "level 0 has label trace only in a non-legacy app" do
       assert LogLevel.to_label(0, false) == :trace
@@ -77,25 +77,25 @@ defmodule LogLevelTest do
 
     @tag task_id: 2
     test "trace code does not send alert" do
-      refute LogLevel.alert_recipient(0, false)
+      assert LogLevel.alert_recipient(0, false) == false
     end
 
     @tag task_id: 2
     test "debug code does not send alert" do
-      refute LogLevel.alert_recipient(1, false)
-      refute LogLevel.alert_recipient(1, true)
+      assert LogLevel.alert_recipient(1, false) == false
+      assert LogLevel.alert_recipient(1, true) == false
     end
 
     @tag task_id: 2
     test "info code does not send alert" do
-      refute LogLevel.alert_recipient(2, false)
-      refute LogLevel.alert_recipient(2, true)
+      assert LogLevel.alert_recipient(2, false) == false
+      assert LogLevel.alert_recipient(2, true) == false
     end
 
     @tag task_id: 2
     test "warning code does not send alert" do
-      refute LogLevel.alert_recipient(3, false)
-      refute LogLevel.alert_recipient(3, true)
+      assert LogLevel.alert_recipient(3, false) == false
+      assert LogLevel.alert_recipient(3, true) == false
     end
   end
 end
