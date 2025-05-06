@@ -1,69 +1,55 @@
 # Collatz Conjecture
 
-The Collatz Conjecture or 3x+1 problem can be summarized as follows:
+Welcome to Collatz Conjecture on Exercism's Elixir Track.
+If you need help running the tests or submitting your code, check out `HELP.md`.
 
-Take any positive integer n. If n is even, divide n by 2 to get n / 2. If n is
-odd, multiply n by 3 and add 1 to get 3n + 1. Repeat the process indefinitely.
-The conjecture states that no matter which number you start with, you will
-always reach 1 eventually.
+## Introduction
 
-Given a number n, return the number of steps required to reach 1.
+One evening, you stumbled upon an old notebook filled with cryptic scribbles, as though someone had been obsessively chasing an idea.
+On one page, a single question stood out: **Can every number find its way to 1?**
+It was tied to something called the **Collatz Conjecture**, a puzzle that has baffled thinkers for decades.
 
-## Examples
+The rules were deceptively simple.
+Pick any positive integer.
 
-Starting with n = 12, the steps would be as follows:
+- If it's even, divide it by 2.
+- If it's odd, multiply it by 3 and add 1.
 
-0. 12
-1. 6
-2. 3
-3. 10
-4. 5
-5. 16
-6. 8
-7. 4
-8. 2
-9. 1
+Then, repeat these steps with the result, continuing indefinitely.
 
-Resulting in 9 steps. So for input n = 12, the return value would be 9.
+Curious, you picked number 12 to test and began the journey:
 
-## Running tests
+12 ➜ 6 ➜ 3 ➜ 10 ➜ 5 ➜ 16 ➜ 8 ➜ 4 ➜ 2 ➜ 1
 
-Execute the tests with:
+Counting from the second number (6), it took 9 steps to reach 1, and each time the rules repeated, the number kept changing.
+At first, the sequence seemed unpredictable — jumping up, down, and all over.
+Yet, the conjecture claims that no matter the starting number, we'll always end at 1.
 
-```bash
-$ mix test
-```
+It was fascinating, but also puzzling.
+Why does this always seem to work?
+Could there be a number where the process breaks down, looping forever or escaping into infinity?
+The notebook suggested solving this could reveal something profound — and with it, fame, [fortune][collatz-prize], and a place in history awaits whoever could unlock its secrets.
 
-### Pending tests
+[collatz-prize]: https://mathprize.net/posts/collatz-conjecture/
 
-In the test suites, all but the first test have been skipped.
+## Instructions
 
-Once you get a test passing, you can unskip the next one by
-commenting out the relevant `@tag :pending` with a `#` symbol.
-
-For example:
-
-```elixir
-# @tag :pending
-test "shouting" do
-  assert Bob.hey("WATCH OUT!") == "Whoa, chill out!"
-end
-```
-
-Or, you can enable all the tests by commenting out the
-`ExUnit.configure` line in the test suite.
-
-```elixir
-# ExUnit.configure exclude: :pending, trace: true
-```
-
-If you're stuck on something, it may help to look at some of
-the [available resources](https://exercism.io/tracks/elixir/resources)
-out there where answers might be found.
+Given a positive integer, return the number of steps it takes to reach 1 according to the rules of the Collatz Conjecture.
 
 ## Source
 
-An unsolved problem in mathematics named after mathematician Lothar Collatz [https://en.wikipedia.org/wiki/3x_%2B_1_problem](https://en.wikipedia.org/wiki/3x_%2B_1_problem)
+### Created by
 
-## Submitting Incomplete Solutions
-It's possible to submit an incomplete solution so you can see how others have completed the exercise.
+- @Tuxified
+
+### Contributed to by
+
+- @angelikatyborska
+- @Cohen-Carlisle
+- @devonestes
+- @neenjaw
+- @sotojuan
+
+### Based on
+
+Wikipedia - https://en.wikipedia.org/wiki/Collatz_conjecture
