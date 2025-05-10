@@ -1,11 +1,11 @@
 defmodule NameBadge do
   def print(id, name, department) do
-    dept = if department == nil, do: "OWNER", else: String.upcase(department)
+    department = if department, do: String.upcase(department), else: "OWNER"
 
-    if id == nil do
-      "#{name} - #{dept}"
+    if id do
+      "[#{id}] - #{name} - #{department}"
     else
-      "[#{id}] - #{name} - #{dept}"
+      "#{name} - #{department}"
     end
   end
 end
