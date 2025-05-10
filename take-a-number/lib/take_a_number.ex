@@ -5,13 +5,14 @@ defmodule TakeANumber do
 
   def loop(state) do
     receive do
-      {:report_state, caller} ->
-        send(caller, state)
+      {:report_state, sender_pid} ->
+        send(sender_pid, state)
         loop(state)
 
-      {:take_a_number, caller} ->
-        send(caller, state + 1)
-        loop(state + 1)
+      {:take_a_number, sender_pid} ->
+        state = state + 1
+        send(sender_pid, state)
+        loop(state)
 
       :stop ->
         {:stop}

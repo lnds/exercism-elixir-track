@@ -17,7 +17,7 @@ spawn(fn -> 2 + 2 end)
 # => #PID<0.125.0>
 ```
 
-`spawn/1` creates a new process that executes the given function and returns a _process identifier_ (PID). The new process will stay alive as long as the function executes, and then silently exit.
+`spawn/1` creates a new process that executes the given 0-arity function and returns a _process identifier_ (PID). The new process will stay alive as long as the function executes, and then silently exit.
 
 Elixir's processes should not be confused with operating system processes. Elixir's processes use much less memory and CPU. It's perfectly fine to have Elixir applications that run hundreds of Elixir processes.
 
@@ -31,7 +31,7 @@ A message can be of any type. Often it consists of atoms and tuples. If you want
 
 `send/2` does not check if the message was received by the recipient, nor if the recipient is still alive. The message ends up in the recipient's _mailbox_ and it will only be read if and when the recipient explicitly asks to _receive messages_.
 
-A message can be read from a mailbox using the `receive/1` macro. It accepts a `do` block that can pattern match on the messages.
+A message can be read from a mailbox using the `receive/1` macro. It accepts a `do` block that can [pattern match][exercism-pattern-matching] on the messages.
 
 ```elixir
 receive do
@@ -50,13 +50,15 @@ If you want to receive more than one message, you need to call `receive/1` recur
 
 Process identifiers are their own data type. They function as _mailbox addresses_ - if you have a process's PID, you can send a message to that process. PIDs are usually created indirectly, as a return value of functions that create new processes, like `spawn`.
 
+[exercism-pattern-matching]: https://exercism.org/tracks/elixir/concepts/pattern-matching
+
 ## Instructions
 
 You are writing an embedded system for a Take-A-Number machine. It is a very simple model. It can give out consecutive numbers and report what was the last number given out.
 
 ## 1. Start the machine
 
-Implement the `start/0` function. It should spawn a new process that has an initial state of `0` and is ready to receive messages. It should return the process's PID.
+Implement the `start/0` function. It should spawn a new process and return the process's PID. The new process doesn't need to do anything yet.
 
 ```elixir
 TakeANumber.start()
@@ -67,15 +69,19 @@ Note that each time you run this code, the PID may be different.
 
 ## 2. Report the machine state
 
-Modify the machine so that it can receive `{:report_state, sender_pid}` messages. It should send its current state (the last given out ticket number) to `sender_pid` and then wait for more messages.
+Modify the machine so that the newly spawned process is ready to receive messages (start a _receive loop_) with an initial state of `0`. It should be able to receive `{:report_state, sender_pid}` messages. As a response to those messages, it should send its current state (the last given out ticket number) to `sender_pid` and then wait for more messages.
 
 ```elixir
 machine_pid = TakeANumber.start()
+
+# a client sending a message to the machine
 send(machine_pid, {:report_state, self()})
 
+# a client receiving a message from the machine
 receive do
   msg -> msg
 end
+
 # => 0
 ```
 
@@ -85,11 +91,15 @@ Modify the machine so that it can receive `{:take_a_number, sender_pid}` message
 
 ```elixir
 machine_pid = TakeANumber.start()
+
+# a client sending a message to the machine
 send(machine_pid, {:take_a_number, self()})
 
+# a client receiving a message from the machine
 receive do
   msg -> msg
 end
+
 # => 1
 ```
 
